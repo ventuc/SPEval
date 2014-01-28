@@ -1,0 +1,89 @@
+**************************************************************************************************
+**                                 Service Portfolio Evaluation:                                **
+**                                 a repository-based framework                                 **
+**************************************************************************************************
+
+
+**********************************
+Description:
+**********************************
+
+The tool SPEval is an R software created to solve the following problems:
+- Assessment of the design processes
+- Effort allocation
+- Savings optimization
+
+The complete description of these problems can be found in:
+Comerio et al. - Service Portfolio Evaluation: a repository-based framework (under review).
+
+The tool consists in two R files:
+- SPEval.R: this file is a script that sets all the parameters and launches the
+	functions designed to solve the previously described problems.
+- Functions.R: this file contains all the functions required.
+
+
+**********************************
+Software required:
+**********************************
+
+Library lpSolveAPI
+
+
+**********************************
+Parameters:
+**********************************
+
+- wd:              working directory that contains the two R files
+- structureFile:   file that contains the structure (is-a and part-of relationships)
+- parametersFile:  file that contains the parameters for all the services
+- nDesignStages:   maximum design stage of the service design process
+- effortRange:     effort range to consider, can be a single value or an array of values
+- depth:           depth for the branch and bound algorithm; see the lpSolveAPI documentation
+- timeout:         timeout in second for the optimization phase
+
+For every problem 3 variables are defined
+- ***Exe:        boolean variable that indicates if the problem must be solved
+- ***LpFile:     file where to save the problem in the lp format
+- ***LogFile:    file where to save the log for every effort level specified
+- ***OutputFile: file where to save the output with all the solutions founded
+
+The problems prefix are:
+- backward:        backward assessment (only ***Exe file, output is printed on the screen)
+- forward:         forecast of savings in adopting the service portfolio (only ***Exe file, output is printed on the screen)
+- productionLines: effort allocation for current production lines
+- portfolio:       effort allocation when the portfolio is available
+- savingsTop:      savings optimization for complete the design of the service since the last design stage
+- savingsAny:      savings optimization for performing any service design stage
+
+
+**********************************
+Input:
+**********************************
+
+The input of the proposed algorithm is composed of two different files in comma-separated values format: the parameters file and the structure file.
+
+The parameters file contains one row for each service; parameters are expressed in the following columns:
+- id:                simple numeric identifier of the services
+- CEq:               id of the set of equivalent services to which the service belongs in the portfolio
+- PEq:               id of the set of equivalent services to which the service belongs in the production lines
+- name:              name of the service
+- cds:               current design stage of the service
+- ef1,...,ef5:       effort (expressed in person/hours) required to cover design stage 1..5
+
+The structure file contains one row for each relationship between services; each relationship is described with three values:
+- parent: identifier of the parent of the current relationship
+- child:  identifier of the child of the current relationship
+- type:   type of the current relationship (is-a or part-of)
+
+
+**********************************
+Output:
+**********************************
+
+The output of the tool is partially on screen and partially in log and output file.
+
+On the screen the tool prints some useful information such as the parameters and structure data read and processed for the production lines and the portfolio. It also prints the solution for problem with prefix "backward" and "forward".
+
+The output file contains one or more solutions given the effort or the effort range specified. Every solution is described with the effort bound, the effort really used and the solution value (that is the number of services modeled for the effort allocation problem and the total amount of savings in the savings optimization problem). Each solution is also detailed with the list of services to develop and the related design stage.
+
+The log file contains in a syntectic form the outcome of every effort specified.
