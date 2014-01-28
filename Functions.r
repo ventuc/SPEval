@@ -1,7 +1,7 @@
 # Functions.r: this file contains all the required functions designed to solve
 # Service Portfolio Evaluation problems
 
-# Copyright (C) 2013  Marco Rossetti
+# Copyright (C) 2014  Marco Rossetti
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
