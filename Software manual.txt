@@ -14,7 +14,7 @@ The tool SPEval is an R software created to solve the following problems:
 - Savings optimization
 
 The complete description of these problems can be found in:
-Comerio et al. - Service Portfolio Evaluation: a repository-based framework (under review).
+Comerio et al. - Service Portfolio Management: a repository-based framework (under review).
 
 The tool consists in two R files:
 - SPEval.R: this file is a script that sets all the parameters and launches the
