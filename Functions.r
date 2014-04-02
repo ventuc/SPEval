@@ -28,17 +28,21 @@ readData <- function(structureFile,parametersFile,nDesignStages) {
 	
 	parametersFileContent <- read.table(parametersFile,sep=',',header=TRUE,quote = "\"",stringsAsFactors=FALSE,dec = ".")
 	
-	# expand is-a relation
+	# retains only part-of relationships
 	structure <- structureFileContent[which(structureFileContent[["type"]]=='part-of'),c("parent","child")]
-	for (alias in which(structureFileContent[,1]=='is-a')) {
-		parentName <- structureFileContent[["parent"]][alias]
-		childName <- structureFileContent[["child"]][alias]
-		structure <- rbind.data.frame(	structure,
-										data.frame(
-											Parent=childName,
-											Child=structure[structure[,1]==parentName,2]
+	
+	# expands is-a relationships (at the time it doesn't work!)
+	if (FALSE){
+		for (alias in which(structureFileContent[["type"]]=='is-a')) {
+			parentName <- structureFileContent[["parent"]][alias]
+			childName <- structureFileContent[["child"]][alias]
+			structure <- rbind.data.frame(structure,
+											data.frame(
+												Parent=childName,
+												Child=structure[structure[,1]==parentName,2]
+											)
 										)
-									)
+		}
 	}
 
 	parameters <- parametersFileContent[order(parametersFileContent[["id"]]),]
