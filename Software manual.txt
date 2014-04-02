@@ -28,12 +28,23 @@ Software required:
 
 Library lpSolveAPI
 
+**********************************
+Usage:
+**********************************
+
+Rscript SPEval.r <path-to-working-dir>
+
+where <path-to-working-dir> is the path to a folder that includes:
+- a "data" folder containing the input data
+- a "problem" folder that will be used by the script to store the LP problem generated
+- a "log" folder that will be used by the script to store the log of the execution
+- a "output" folder that will contain the output of the script
+
 
 **********************************
 Parameters:
 **********************************
 
-- wd:              working directory that contains the two R files
 - structureFile:   file that contains the structure (is-a and part-of relationships)
 - parametersFile:  file that contains the parameters for all the services
 - nDesignStages:   maximum design stage of the service design process

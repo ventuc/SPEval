@@ -20,38 +20,45 @@
 
 rm(list = ls())
 
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) == 0){
+	print("Pass the working directory as first argument")
+	q(save="no")
+}
+
+abspath <- function(relpath){
+	return(paste(args[1], relpath, sep = ''))
+}
+
 ##################################
 # PARAMETERS
 ##################################
-wd <- '/Users/Marco/Desktop/ServiceReuse'
-structureFile 				<- './data/CaseStudy_S.csv'
-parametersFile 				<- './data/CaseStudy_P.csv'
+structureFile 				<- abspath('/data/CaseStudy_S.csv')
+parametersFile 				<- abspath('/data/CaseStudy_P.csv')
 backwardExe					<- TRUE
 forwardExe					<- TRUE
 productionLinesExe			<- TRUE
-productionLinesLpFile		<- './problem/productionLinesProblem.lp'
-productionLinesLogFile 		<- './log/productionLinesLog.txt'
-productionLinesOutputFile	<- './output/productionLinesOutput.txt'
+productionLinesLpFile		<- abspath('/problem/productionLinesProblem.lp')
+productionLinesLogFile 		<- abspath('/log/productionLinesLog.txt')
+productionLinesOutputFile	<- abspath('/output/productionLinesOutput.txt')
 portfolioExe				<- TRUE
-portfolioLpFile				<- './problem/portfolioProblem.lp'
-portfolioLogFile 			<- './log/portfolioLog.txt'
-portfolioOutputFile			<- './output/portfolioOutput.txt'
+portfolioLpFile				<- abspath('/problem/portfolioProblem.lp')
+portfolioLogFile 			<- abspath('/log/portfolioLog.txt')
+portfolioOutputFile			<- abspath('/output/portfolioOutput.txt')
 savingsTopExe				<- TRUE
-savingsTopLogFile 			<- './log/savingsTopLog.txt'
-savingsTopLpFile			<- './problem/savingsTopProblem.lp'
-savingsTopOutputFile		<- './output/savingsTopOutput.txt'
+savingsTopLogFile 			<- abspath('/log/savingsTopLog.txt')
+savingsTopLpFile			<- abspath('/problem/savingsTopProblem.lp')
+savingsTopOutputFile		<- abspath('/output/savingsTopOutput.txt')
 savingsAnyExe				<- TRUE
-savingsAnyLpFile			<- './problem/savingsAnyProblem.lp'
-savingsAnyLogFile 			<- './log/savingsAnyLog.txt'
-savingsAnyOutputFile		<- './output/savingsAnyOutput.txt'
+savingsAnyLpFile			<- abspath('/problem/savingsAnyProblem.lp')
+savingsAnyLogFile 			<- abspath('/log/savingsAnyLog.txt')
+savingsAnyOutputFile		<- abspath('/output/savingsAnyOutput.txt')
 nDesignStages				<- 5
-
 
 effortRange					<- seq(0,1000,10)
 depth						<- -50
 timeout						<- 200
 
-setwd(wd)
 library("lpSolveAPI")
 source('./Functions.r')
 

@@ -25,6 +25,7 @@ readData <- function(structureFile,parametersFile,nDesignStages) {
 
 	# read data
 	structureFileContent <- read.table(structureFile,sep=',',header=TRUE,quote = "\"",stringsAsFactors=FALSE,dec = ".")
+	
 	parametersFileContent <- read.table(parametersFile,sep=',',header=TRUE,quote = "\"",stringsAsFactors=FALSE,dec = ".")
 	
 	# expand is-a relation
