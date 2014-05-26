@@ -147,6 +147,7 @@ getClassStructure <- function(structure,parameters,classInUse,nDesignStages) {
 	#parameters[,paste("sav",1:nDesignStages,sep="")] <- 0
 
 	for (class in unique(parameters[[classInUse]])) {
+		print(class)
 		eqServ <- parameters[which(parameters[[classInUse]]==class),"id"]
 		
 		if (length(eqServ) > 1) {

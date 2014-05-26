@@ -25,10 +25,28 @@
 # 
 # Each app expects input data encoded in JSON. Input data are:
 # 1. the service repository (the set of services with their part-of and is-a relationships)
-# 2. the service portfolio (the production lines under which teh services are produced and their development stage)
+# 2. the service portfolio (the production lines under which the services are produced and their development stage)
 # 
 # Example:
 # {
+#	"portfolio": [
+#		{
+#			"id": 1,
+#			"ceq": 1,
+#			"peq": 1,
+#			"name": "pl1.S1",
+#			"cds": 1,
+#			"effort": [25, 10, 35, 15, 30]
+#		},
+#		{
+#			"id": 2,
+#			"ceq": 2,
+#			"peq": 2,
+#			"name": "pl1.S2",
+#			"cds": 2,
+#			"effort": [10, 5, 15, 10, 15]
+#		}
+#	],
 #	"services": [
 #		{
 #			"parent": 1,
@@ -45,14 +63,6 @@
 #			"child": 4,
 #			"type": "is-a"
 #		}
-#	],
-#	"portfolio": [
-#		{
-#			"id": 1
-#		},
-#		{
-#			"id": 2
-#		}
 #	]
 # }
 #
@@ -66,20 +76,23 @@ source("DefaultOptimizationStrategy.r")
 # Reads the JSON body of the given request and unserializes it, if needed (takes care of the encoding)
 readJSONRequest = function(req, unserialize = TRUE){
 	jsonBytes = req$body()$read()
-	json = rawToChar(jsonBytes)
-	if (req$content_charset() == "UTF-8"){
+	
+	valid = FALSE
+	data = NULL
+	
+	if (length(jsonBytes)){
+		json = rawToChar(jsonBytes)
 		Encoding(json) <- "UTF-8"
-	}
-	
-	# Validates the JSON string
-	valid <- validate(json)
-	
-	data = NULL;
-	if (valid){
-		if (unserialize){
-			data <- fromJSON(json);
+		
+		# Validates the JSON string
+		valid <- validate(json)
+		
+		if (valid){
+			if (unserialize){
+				data <- fromJSON(json)
+			}
+			else data = json
 		}
-		else data = json
 	}
 	
 	return(list(valid = valid, data = data))
@@ -101,10 +114,14 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 					# If data is not valid, error
 					if (input$valid == FALSE){
 						res = Rook::Response$new(status = 400)
-						res$write("Request doesn't containt valid JSON-encoded input data")
+						res$write("Request doesn't contain valid JSON-encoded input data")
 					}
 					# Does the job
 					else {
+						# Clean data
+						input$data <- cleanData(input$data)
+						
+						# Response
 						res$header("Content-Type", "application/json")
 						
 						json = toJSON(input$data)
@@ -117,6 +134,14 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 		}
 	)
 )
+
+cleanData = function(data){
+	# Retains only part-of relationships between services
+	data$services <- data$services[which(data$services[["type"]] == "part-of"),]
+	
+	
+	return(data)
+}
 
 # Builders of the apps to deploy along with app names
 oabDefault = OptimizationAppBuilder$new(strategy = DefaultOptimizationStrategy$new())
