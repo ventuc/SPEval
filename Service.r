@@ -36,7 +36,7 @@
 #			"peq": 1,
 #			"name": "pl1.S1",
 #			"cds": 1,
-#			"effort": [25, 10, 35, 15, 30]
+#			"effort": [ 25,10,35,15,30 ]
 #		},
 #		{
 #			"id": 2,
@@ -44,15 +44,119 @@
 #			"peq": 2,
 #			"name": "pl1.S2",
 #			"cds": 2,
-#			"effort": [10, 5, 15, 10, 15]
+#			"effort": [ 10,5,15,10,15 ]
 #		},
 #		{
 #			"id": 3,
-#			"ceq": 2,
-#			"peq": 2,
-#			"name": "pl1.S2",
+#			"ceq": 3,
+#			"peq": 3,
+#			"name": "pl1.S3",
+#			"cds": 1,
+#			"effort": [ 15,10,15,10,20 ]
+#		},
+#		{
+#			"id": 4,
+#			"ceq": 4,
+#			"peq": 4,
+#			"name": "pl1.S4",
+#			"cds": 3,
+#			"effort": [ 10,5,15,15,25 ]
+#		},
+#		{
+#			"id": 5,
+#			"ceq": 5,
+#			"peq": 5,
+#			"name": "pl1.S5",
+#			"cds": 1,
+#			"effort": [ 10,15,15,5,30 ]
+#		},
+#		{
+#			"id": 6,
+#			"ceq": 6,
+#			"peq": 6,
+#			"name": "pl1.S6",
 #			"cds": 2,
-#			"effort": [10, 5, 15, 10, 15]
+#			"effort": [ 5,5,15,5,10 ]
+#		},
+#		{
+#			"id": 7,
+#			"ceq": 7,
+#			"peq": 7,
+#			"name": "pl1.S7",
+#			"cds": 2,
+#			"effort": [ 10,5,10,10,10 ]
+#		},
+#		{
+#			"id": 13,
+#			"ceq": 7,
+#			"peq": 7,
+#			"name": "pl2.S11",
+#			"cds": 2,
+#			"effort": [ 10,5,10,10,10 ]
+#		},
+#		{
+#			"id": 8,
+#			"ceq": 8,
+#			"peq": 8,
+#			"name": "pl1.S8",
+#			"cds": 1,
+#			"effort": [ 20,10,35,20,35 ]
+#		},
+#		{
+#			"id": 9,
+#			"ceq": 9,
+#			"peq": 9,
+#			"name": "pl1.S9",
+#			"cds": 2,
+#			"effort": [ 15,5,30,10,30 ]
+#		},
+#		{
+#			"id": 10,
+#			"ceq": 10,
+#			"peq": 10,
+#			"name": "pl2.S10",
+#			"cds": 1,
+#			"effort": [ 40,10,35,20,45 ]
+#		},
+#		{
+#			"id": 11,
+#			"ceq": 6,
+#			"peq": 11,
+#			"name": "pl2.S12",
+#			"cds": 2,
+#			"effort": [ 5,5,15,5,10 ]
+#		},
+#		{
+#			"id": 12,
+#			"ceq": 5,
+#			"peq": 12,
+#			"name": "pl2.S13",
+#			"cds": 4,
+#			"effort": [ 10,15,15,5,30 ]
+#		},
+#		{
+#			"id": 14,
+#			"ceq": 14,
+#			"peq": 14,
+#			"name": "pl3.S14",
+#			"cds": 2,
+#			"effort": [ 15,10,15,20,15 ]
+#		},
+#		{
+#			"id": 15,
+#			"ceq": 15,
+#			"peq": 15,
+#			"name": "pl3.S15",
+#			"cds": 2,
+#			"effort": [ 10,5,10,20,15 ]
+#		},
+#		{
+#			"id": 16,
+#			"ceq": 7,
+#			"peq": 16,
+#			"name": "pl3.S16",
+#			"cds": 2,
+#			"effort": [ 10,5,10,10,10 ]
 #		}
 #	],
 #	"services": [
@@ -62,14 +166,64 @@
 #			"type": "part-of"
 #		},
 #		{
-#			"parent": 2,
+#			"parent": 1,
 #			"child": 3,
 #			"type": "part-of"
 #		},
 #		{
-#			"parent": 3,
+#			"parent": 1,
 #			"child": 4,
-#			"type": "is-a"
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 8,
+#			"child": 9,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 8,
+#			"child": 5,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 3,
+#			"child": 5,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 3,
+#			"child": 6,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 3,
+#			"child": 7,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 10,
+#			"child": 13,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 10,
+#			"child": 11,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 10,
+#			"child": 12,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 14,
+#			"child": 15,
+#			"type": "part-of"
+#		},
+#		{
+#			"parent": 14,
+#			"child": 16,
+#			"type": "part-of"
 #		}
 #	]
 # }
@@ -132,6 +286,21 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						# Validates data
 						validateData(input$data)
 						
+						print("input")
+						print(input$data)
+						
+						# Optimizes portfolio w.r.t. conceptual equivalence classes
+						ceqData = applyReuse(input$data, "ceq")
+
+						print("ceq portfolio")
+						print(ceqData)
+						
+						# Optimizes portfolio w.r.t. production equivalence classes
+						peqData = applyReuse(input$data, "peq")
+
+						print("peq portfolio")
+						print(peqData)
+						
 						# Response
 						res$header("Content-Type", "application/json")
 						
@@ -151,8 +320,16 @@ cleanData = function(data){
 	# Retains only part-of relationships between services (and ignores the "type" column)
 	data$services <- data$services[which(data$services[["type"]] == "part-of"), which(colnames(data$services) != "type")]
 	
+	# Convert efforts data as a matrix
+	data$portfolio[["effort"]] <- t(matrix(unlist(data$portfolio[["effort"]]), ncol = nrow(data$portfolio), nrow = 5))
+	
 	# Sorts by ID
 	data$portfolio <- data$portfolio[order(data$portfolio[["id"]]),]
+	
+	# Adds some metadata
+	data$portfolio[["count"]] <- 1
+	data$portfolio[["saving"]] <- matrix(0, nrow = nrow(data$portfolio), ncol = 5)
+	data$portfolio[["aggregateName"]] <- data$portfolio[["name"]]
 	
 	return(data)
 }
@@ -188,10 +365,10 @@ validateData <- function(data){
 			eqClassServices = data$portfolio[which(data$portfolio[[eqClassType]] == eqClass), "effort"]
 			
 			# Finds a mismatch by counting the number of non unique efforts for each design stage
-			mismatch <- (length(which(apply(matrix(unlist(eqClassServices), nrow = 5, ncol = length(eqClassServices)), 1, function(i) length(unique(i))) > 1)) > 0)
+			mismatch <- (length(which(apply(eqClassServices, 2, function(i) length(unique(i))) > 1)) > 0)
 			
 			if (mismatch){
-				stop(paste("Equivalence class ", class, " of type '", eqClassType, "' has not the same efforts for all services", sep = ''))
+				stop(paste("Equivalence class ", eqClass, " of type '", eqClassType, "' has not the same efforts for all services", sep = ''))
 			}
 		}
 	}
@@ -229,6 +406,58 @@ hasLoops <- function(services){
 	hasLoops <- (length(which(diag(amExtended) > 0)) > 0)
 	
 	return(hasLoops)
+}
+
+# Replace equivalent services (defined by the given equivalence class: "ceq", "peq")
+# in the portfolio with the ones at the highest design stage
+applyReuse <- function(services, eqClassType){
+	for (eqClass in unique(services$portfolio[[eqClassType]])){
+		# Indexes of services in the current equivalence class
+		servicesIDx <- which(services$portfolio[[eqClassType]] == eqClass)
+		
+		# IDs of services in the current equivalence class
+		servicesIDs <- services$portfolio[servicesIDx, "id"]
+		
+		if (length(servicesIDs) > 1){
+			# Index of the service with maximum CDS (in the set of services of the current equivalence class)
+			maxCds <- which.max(services$portfolio[servicesIDx, "cds"])
+			
+			# Updates the structure
+			services$services[["parent"]][which(services$services[["parent"]] %in% servicesIDs[-maxCds])] <- servicesIDs[maxCds]
+			services$services[["child"]][which(services$services[["child"]] %in% servicesIDs[-maxCds])] <- servicesIDs[maxCds]
+			
+			# Index of the service with maximum CDS (w.r.t. the portfolio)
+			maxRow <- which(services$portfolio[["id"]] %in% servicesIDs[maxCds])
+			# Indexes of the services with non-maximum CDS (w.r.t. the portfolio)
+			otherRows <- which(services$portfolio[["id"]] %in% servicesIDs[-maxCds])
+			
+			# Updates the aggregates of equivalent services
+			services$portfolio[maxRow, "count"] <- sum(services$portfolio[c(maxRow, otherRows), "count"])
+			services$portfolio[maxRow, "aggregateName"] <- paste(services$portfolio[c(maxRow, otherRows), "aggregateName"], collapse = ',')
+			
+			# Computes the savings thanks to reuse
+			for (designStage in 1:5){
+				# Indexes of equivalent services at a design stage lower than the current
+				lessCds <- which(services$portfolio[otherRows, "cds"] < designStage)
+				
+				# Sums old saving of the aggregated service and the efforts saved by aggregating other services
+				if (length(lessCds) > 0){
+					services$portfolio[maxRow, "saving"][,designStage] <- services$portfolio[maxRow, "saving"][,designStage] + sum(services$portfolio[otherRows[lessCds], "effort"][, designStage])
+				}
+			}
+			
+			# Removes equivalent services
+			services$portfolio <- services$portfolio[-which(services$portfolio[["id"]] %in% servicesIDs[-maxCds]),]
+		}
+	}
+	
+	# Removes equivalent services from the structure (now they're equal, so they're duplicate)
+	services$services <- unique(services$services)
+	
+	# Validation
+	validateData(services)
+	
+	return(services)
 }
 
 # Builders of the apps to deploy along with app names

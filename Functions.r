@@ -147,7 +147,6 @@ getClassStructure <- function(structure,parameters,classInUse,nDesignStages) {
 	#parameters[,paste("sav",1:nDesignStages,sep="")] <- 0
 
 	for (class in unique(parameters[[classInUse]])) {
-		print(class)
 		eqServ <- parameters[which(parameters[[classInUse]]==class),"id"]
 		
 		if (length(eqServ) > 1) {
@@ -167,6 +166,7 @@ getClassStructure <- function(structure,parameters,classInUse,nDesignStages) {
 			# compute savings
 			for (l in 1:nDesignStages) {
 				lessCds <- which(parameters[otherRows,"cds"] < l)
+				print(lessCds)
 				if (length(lessCds) > 0) {
 					parameters[maxRow,paste("sav",l,sep="")] <- parameters[maxRow,paste("sav",l,sep="")]+
 						sum(parameters[otherRows[lessCds],paste("ef",l,sep="")])	
