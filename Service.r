@@ -13,10 +13,10 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+#
 #
 # The service exposes several apps, each implementing a specific type
 # of optimization (i.e. optimizes using a different objective function).
@@ -235,6 +235,8 @@ library("jsonlite")
 source("OptimizationStrategy.r")
 source("DefaultOptimizationStrategy.r")
 
+devDir <- "D:\\Users\\Claudio\\Desktop\\seva\\dev\\"
+
 # Reads the JSON body of the given request and unserializes it, if needed (takes care of the encoding)
 readJSONRequest = function(req, unserialize = TRUE){
 	jsonBytes = req$body()$read()
@@ -307,6 +309,9 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						bestForwardAssessment <- forwardAssessment(ceqData$portfolio)
 						
 						output$forwardAssessment = list(current = currentForwardAssessment, best = bestForwardAssessment)
+						
+						# Builds the optimization model
+						model <- strategy$createModel(peqData, -50)
 						
 						# Response
 						res$header("Content-Type", "application/json")
