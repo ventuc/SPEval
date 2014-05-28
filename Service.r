@@ -286,25 +286,32 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						# Validates data
 						validateData(input$data)
 						
-						print("input")
-						print(input$data)
-						
-						# Optimizes portfolio w.r.t. conceptual equivalence classes
-						ceqData = applyReuse(input$data, "ceq")
-
-						print("ceq portfolio")
-						print(ceqData)
+						# Inits output data list
+						output <- list()
 						
 						# Optimizes portfolio w.r.t. production equivalence classes
 						peqData = applyReuse(input$data, "peq")
 
-						print("peq portfolio")
-						print(peqData)
+						# Optimizes portfolio w.r.t. conceptual equivalence classes
+						ceqData = applyReuse(input$data, "ceq")
+						
+						# Backward assessment
+						worstBackwardAssessment <- backwardAssessment(input$data$portfolio)
+						currentBackwardAssessment <- backwardAssessment(peqData$portfolio)
+						bestBackwardAssessment <- backwardAssessment(ceqData$portfolio)
+						
+						output$backwardAssessment = list(worst = worstBackwardAssessment, current = currentBackwardAssessment, best = bestBackwardAssessment)
+						
+						# Forward assessment
+						currentForwardAssessment <- forwardAssessment(peqData$portfolio)
+						bestForwardAssessment <- forwardAssessment(ceqData$portfolio)
+						
+						output$forwardAssessment = list(current = currentForwardAssessment, best = bestForwardAssessment)
 						
 						# Response
 						res$header("Content-Type", "application/json")
 						
-						json = toJSON(input$data)
+						json = toJSON(output)
 						res$write(json)
 					}
 					
@@ -458,6 +465,25 @@ applyReuse <- function(services, eqClassType){
 	validateData(services)
 	
 	return(services)
+}
+
+# Backward assessment of the portfolio
+backwardAssessment <- function(portfolio){
+	effort <- 0
+	for (i in 1:nrow(portfolio)) {
+		if (portfolio[i, "cds"] > 0) {
+			for (j in 1:portfolio[i, "cds"]){
+				effort <- effort + portfolio[i, "effort"][j]
+			}
+		}
+	}
+	
+	return(effort)
+}
+
+# Forward assessment of the portfolio
+forwardAssessment <- function(portfolio){
+	return(sum(portfolio[["effort"]]) - backwardAssessment(portfolio))
 }
 
 # Builders of the apps to deploy along with app names
