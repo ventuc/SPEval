@@ -1,6 +1,6 @@
 # Service: this script starts a web server for web services requests
 #
-# Requires: Rook, jsonlite
+# Requires: Rook, jsonlite, lpSolveAPI
 #
 # Copyright (C) 2014  Claudio Venturini
 #
