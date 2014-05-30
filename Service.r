@@ -231,9 +231,10 @@
 
 library("Rook")
 library("jsonlite")
-library("lpSolveAPI")
 
 source("OptimizationStrategy.r")
+source("ModelBuilder.r")
+
 source("DefaultOptimizationStrategy.r")
 
 devDir <- "D:\\Users\\Claudio\\Desktop\\seva\\dev\\"
@@ -311,6 +312,9 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						
 						output$forwardAssessment = list(current = unbox(currentForwardAssessment), best = unbox(bestForwardAssessment))
 						
+						# Creates the model builder for the current data
+						modelBuilder = ModelBuilder$new(peqData, strategy)
+						
 						# Optimization (with different budget values)
 						budgets <- seq(0, 1000, 10)
 						nBudgets <- length(budgets)
@@ -320,11 +324,15 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						for (b in 1:nBudgets){
 							budget <- budgets[b]
 							
-							# Builds the optimization model
-							lpModel <- strategy$createModel(peqData, -50, budget)
+							# Generates the problem model
+							model <- modelBuilder$generateModel(budget)
+							
+							# Execution timeout and depth
+							model$setTimeout(200)
+							model$setDepth(-50)
 							
 							# Solves the problem
-							result <- solveProblem(lpModel)
+							result <- model$solveProblem()
 							
 							output$optimization[[b]] = list(budget = unbox(budget), status = unbox(result$status))
 						}
@@ -505,31 +513,6 @@ backwardAssessment <- function(portfolio){
 # Forward assessment of the portfolio
 forwardAssessment <- function(portfolio){
 	return(sum(portfolio[["effort"]]) - backwardAssessment(portfolio))
-}
-
-# Solves a linear programming model problem
-solveProblem <- function(lpModel){
-	lp.control(lpModel, timeout = 200)
-	
-	result <- solve(lpModel)
-	
-	status <- "error"
-	if (result == 0){
-		status = "solved"
-	}
-	else if (result == 1){
-		status = "suboptimal"
-	}
-	else if (result == 2){
-		status = "infeasible"
-	}
-	
-	return(list(
-		status = status,
-		solution = get.variables(lpModel),
-		effort = get.constraints(lpModel)[nrow(lpModel)],
-		objective = get.objective(lpModel)
-	))
 }
 
 # Builders of the apps to deploy along with app names

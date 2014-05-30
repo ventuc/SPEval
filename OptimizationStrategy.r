@@ -16,5 +16,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 OptimizationStrategy = setRefClass("OptimizationStrategy",
-	methods = list(createModel = function(data, depth, budget){ })
+	methods = list(builObjectiveFunction = function(data){ stop("Implement this method!") })
 )
