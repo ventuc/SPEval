@@ -17,50 +17,32 @@
 
 DefaultOptimizationStrategy = setRefClass("DefaultOptimizationStrategy",
 	contains = "OptimizationStrategy",
-	methods = list(createModel = function(data, depth){
+	methods = list(createModel = function(data, depth, budget){
 		nServices <- nrow(data$portfolio)
 		
 		# Builds the constraints
-		constraints <- buildConstraints(data)
+		constraints <- buildConstraints(data, budget)
 		
-		print(constraints)
-
-		##################################
-		# OBJ FUNCTION
-		##################################
-		f_obj <- rep(0,nServices*nDesignStages)
-		f_obj[1:nServices+(nDesignStages-1)*nServices] <- parameters[["count"]]
+		# Builds the objective function
+		objFn <- builObjectiveFunction(data)
 		
-		f_obj_out <- f_obj
+		# Builds the linear programming model
+		lpModel <- make.lp(nrow = 0, ncol = ncol(constraints$constraints))
 		
-		# add a little negative weight proportional to the effort
-		# just to avoid different solutions with different effort
-		# but the same objective value
-		if (length(which(f_obj>0)) > 0)
-			f_obj <- f_obj - effortConstraint/sum(effortConstraint)*min(f_obj[f_obj>0])
-
-		
-		##################################
-		# CREATE MODEL
-		##################################
-		lps_model <- make.lp(nrow = 0, ncol = ncol(f_con_full))
-		
-		for (i in 1:nrow(f_con_full)) {
-			add.constraint(lps_model, f_con_full[i,], f_dir[i], f_rhs[i])
+		for (i in 1:nrow(constraints$constraints)){
+			add.constraint(lpModel, constraints$constraints[i,], constraints$conditions[i], constraints$rhs[i])
 		}
 		
-		dimnames(lps_model) <- list(rownames(f_con_full),colnames(f_con_full))
+		dimnames(lpModel) <- list(rownames(constraints$constraints),colnames(constraints$constraints))
 		
-		set.type(lps_model, 1:(nServices*nDesignStages), "binary")
-		set.objfn(lps_model, f_obj)
+		set.type(lpModel, 1:(nServices * 5), "binary")
+		set.objfn(lpModel, objFn)
 		
-		lp.control(lps_model, sense = 'max', bb.depthlimit = depth)
+		lp.control(lpModel, sense = 'max', bb.depthlimit = depth)
 		
-		write.lp(lps_model, lpProblemFile, type = c("lp"), use.names = FALSE)
-		
-		return(list(lps_model=lps_model,f_obj=f_obj_out))
+		return(lpModel)
 	},
-	buildConstraints = function(data){
+	buildConstraints = function(data, budget){
 		# Number of services
 		nServices <- nrow(data$portfolio)
 		
@@ -148,13 +130,45 @@ DefaultOptimizationStrategy = setRefClass("DefaultOptimizationStrategy",
 		
 		# Appends the constraints, the condition and the right hand side constants
 		constraints <- rbind(constraints, "efbdg" = budgetConstraint)
-		rhs <- c(rhs, 0)
+		rhs <- c(rhs, budget)
 		conditions <- c(conditions, "<=")
 		
 		constraints <- rbind(constraints, "dsdev" = developedStagesConstraint)
 		rhs <- c(rhs, sum(developedStagesConstraint))
 		conditions <- c(conditions, ">=")
 		
-		return(list(constraints = constraints, conditions = conditions, rhs = rhs)
+		return(list(constraints = constraints, conditions = conditions, rhs = rhs))
+	},
+	builObjectiveFunction = function(data){
+		# Number of services
+		nServices <- nrow(data$portfolio)
+		
+		# Objective function
+		objFn <- rep(0, nServices * 5)
+		objFn[1:nServices + 4 * nServices] <- data$portfolio[["count"]]
+		
+		# Adds a little negative weight proportional to the
+		# effort in order to avoid equally optimal solutions
+		# with different efforts
+		actualObjFn <- objFn
+		if (length(which(objFn > 0)) > 0){
+			# Computes the effort needed for each design stage of each service
+			effort <- rep(0, nServices * 5)
+			for (l in 1:5){
+				effort[1:nServices + (l - 1) * nServices] <- data$portfolio[["effort"]][, l]
+				
+				# Indexes of services for which the current stage has been already completed, w.r.t to the portfolio
+				idxCompleted <- which(data$portfolio[["cds"]] >= l)
+				
+				# Effort needed is 0 for stages already completed
+				if (length(idxCompleted) > 0) {
+					effort[idxCompleted + (l - 1) * nServices] <- 0
+				}
+			}
+			
+			actualObjFn <- actualObjFn - effort / sum(effort) * min(actualObjFn[actualObjFn > 0])
+		}
+		
+		return(actualObjFn)
 	})
 )

@@ -231,6 +231,7 @@
 
 library("Rook")
 library("jsonlite")
+library("lpSolveAPI")
 
 source("OptimizationStrategy.r")
 source("DefaultOptimizationStrategy.r")
@@ -302,21 +303,36 @@ OptimizationAppBuilder = setRefClass("OptimizationAppBuilder",
 						currentBackwardAssessment <- backwardAssessment(peqData$portfolio)
 						bestBackwardAssessment <- backwardAssessment(ceqData$portfolio)
 						
-						output$backwardAssessment = list(worst = worstBackwardAssessment, current = currentBackwardAssessment, best = bestBackwardAssessment)
+						output$backwardAssessment = list(worst = unbox(worstBackwardAssessment), current = unbox(currentBackwardAssessment), best = unbox(bestBackwardAssessment))
 						
 						# Forward assessment
 						currentForwardAssessment <- forwardAssessment(peqData$portfolio)
 						bestForwardAssessment <- forwardAssessment(ceqData$portfolio)
 						
-						output$forwardAssessment = list(current = currentForwardAssessment, best = bestForwardAssessment)
+						output$forwardAssessment = list(current = unbox(currentForwardAssessment), best = unbox(bestForwardAssessment))
 						
-						# Builds the optimization model
-						model <- strategy$createModel(peqData, -50)
+						# Optimization (with different budget values)
+						budgets <- seq(0, 1000, 10)
+						nBudgets <- length(budgets)
+						
+						output$optimization = vector("list", length = nBudgets)
+						
+						for (b in 1:nBudgets){
+							budget <- budgets[b]
+							
+							# Builds the optimization model
+							lpModel <- strategy$createModel(peqData, -50, budget)
+							
+							# Solves the problem
+							result <- solveProblem(lpModel)
+							
+							output$optimization[[b]] = list(budget = unbox(budget), status = unbox(result$status))
+						}
 						
 						# Response
 						res$header("Content-Type", "application/json")
 						
-						json = toJSON(output)
+						json = toJSON(output, simplifyVector = TRUE)
 						res$write(json)
 					}
 					
@@ -489,6 +505,31 @@ backwardAssessment <- function(portfolio){
 # Forward assessment of the portfolio
 forwardAssessment <- function(portfolio){
 	return(sum(portfolio[["effort"]]) - backwardAssessment(portfolio))
+}
+
+# Solves a linear programming model problem
+solveProblem <- function(lpModel){
+	lp.control(lpModel, timeout = 200)
+	
+	result <- solve(lpModel)
+	
+	status <- "error"
+	if (result == 0){
+		status = "solved"
+	}
+	else if (result == 1){
+		status = "suboptimal"
+	}
+	else if (result == 2){
+		status = "infeasible"
+	}
+	
+	return(list(
+		status = status,
+		solution = get.variables(lpModel),
+		effort = get.constraints(lpModel)[nrow(lpModel)],
+		objective = get.objective(lpModel)
+	))
 }
 
 # Builders of the apps to deploy along with app names
